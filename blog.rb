@@ -1,7 +1,12 @@
-class Blog < Array 
+require 'date'
 
+class Blog < Array
+
+  def sort_by_date
+    self.sort! { |x, y| x.date <=> y.date }
+  end
   def publish
-    self.each do |post|
+    self.sort_by_date.each do |post|
       puts post.title
       puts post.text
     end
