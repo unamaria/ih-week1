@@ -1,9 +1,10 @@
 class Blog < Array 
 
-  def create_front_page
-  end
-
-  def publish_front_page
+  def publish
+    self.each do |post|
+      puts post.title
+      puts post.text
+    end
   end
 
 end
