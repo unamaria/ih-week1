@@ -7,7 +7,7 @@ class Blog < Array
   end
   def publish
     self.sort_by_date.each do |post|
-      puts post.title
+      puts post.sponsor ? "******#{post.title}******" : post.title
       puts post.text
     end
   end
@@ -16,12 +16,13 @@ end
 
 class Post
 
-  attr_reader :title, :date, :text
+  attr_reader :title, :date, :text, :sponsor
 
-  def initialize(title, date, text)
+  def initialize(title, date, text, sponsor=false)
     @title = title
     @date = date
     @text = text
+    @sponsor = sponsor
   end
 
 end
