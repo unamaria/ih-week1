@@ -1,5 +1,23 @@
 require 'date'
 require 'colorize'
+require 'io/console'
+ 
+# Reads keypresses from the user including 2 and 3 escape character sequences.
+def read_char
+  STDIN.echo = false
+  STDIN.raw!
+ 
+  input = STDIN.getc.chr
+  if input == "\e" then
+    input << STDIN.read_nonblock(3) rescue nil
+    input << STDIN.read_nonblock(2) rescue nil
+  end
+ensure
+  STDIN.echo = true
+  STDIN.cooked!
+ 
+  return input
+end
 
 class Blog
   attr_reader :posts, :pages_w_posts
@@ -41,6 +59,16 @@ class Blog
     print_pagination  
   end
 
+  def changePage
+    c = read_char
+    if c == "\e[C" # right arrow
+      next_page unless @current_page == @pages_w_posts.size - 1       
+    elsif c == "\e[D" # left arrow
+      previous_page unless @current_page == 0  
+    end 
+    c == " " ? return : changePage
+  end
+
   def publish
     # sort
     sort_by_date(@posts)
@@ -54,6 +82,7 @@ class Blog
       publish_post(post)
     end
     print_pagination
+    changePage
   end
 
 end
