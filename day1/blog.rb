@@ -68,7 +68,7 @@ class Blog
     elsif c == "\e[D" # left arrow
       previous_page unless @current_page == 0  
     end 
-    c == "q" ? return : changePage
+    c == "q" ? return : changePage # quit loop
   end
 
   def publish
@@ -102,26 +102,3 @@ class Post
   end
 
 end
-
-
-p1 = Post.new("Rough trade", Date.new(1973,2,3), "Cool music store", "sponsor")
-p2 = Post.new("Joan Miquel Oliver", Date.new(1988,2,3), "Era un homenet petit")
-p3 = Post.new("Post number 3", Date.new(1999,2,3), "Era un homenet petit")
-p4 = Post.new("Post number 4", Date.new(2000,2,3), "Era un homenet petit")
-p5 = Post.new("Post number 5", Date.new(2001,2,3), "Era un homenet petit")
-p6 = Post.new("Post number 6", Date.new(2002,2,3), "Era un homenet petit")
-p7 = Post.new("Post number 7", Date.new(2003,2,3), "Era un homenet petit")
-p8 = Post.new("Post number 8", Date.new(2004,2,3), "Era un homenet petit")
-p9 = Post.new("Post number 9", Date.new(2010,2,3), "Era un homenet petit")
-
-blog = Blog.new
-blog.posts << p1
-blog.posts << p2
-blog.posts << p3
-blog.posts << p4
-blog.posts << p5
-blog.posts << p6
-blog.posts << p7
-blog.posts << p8
-blog.posts << p9
-blog.publish
