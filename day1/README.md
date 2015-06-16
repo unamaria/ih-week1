@@ -26,3 +26,9 @@ Post title 3
 Post 3 text
 ----------------
 ```
+
+### Bonus blog
+
+So we need to organize posts, and nothing better than pagination. In this new version of the blog, we want that it only shows three posts per page, and at the the bottom, we would like to show the number of pages that it has and it will be very cool if the current page is shown in a different colour (you can use the colorize gem). To change from one page to another, we would like to use the left key and the right key.
+
+To quit, press 'q'.
