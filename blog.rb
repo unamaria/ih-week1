@@ -3,9 +3,15 @@ require 'colorize'
 
 class Blog
   attr_reader :posts, :pages_w_posts
+
   def initialize
     @posts = []
     @pages_w_posts = []
+    @current_page = 0
+  end
+
+  def sort_by_date(arr)
+    arr.sort! { |x, y| x.date <=> y.date } # CHECK .SORT_BY
   end
 
   def publish_post(post)
@@ -13,8 +19,24 @@ class Blog
     puts post.text
   end
 
-  def sort_by_date(arr)
-    arr.sort! { |x, y| x.date <=> y.date } # CHECK .SORT_BY
+  def print_pagination
+    @pages_w_posts.each_index { |page_i| print page_i + 1, " " }
+  end
+
+  def next_page
+    @pages_w_posts[@current_page + 1].each do |post|
+      publish_post(post)
+    end  
+    @current_page += 1 unless @current_page == @pages_w_posts.size - 1
+    print_pagination  
+  end
+
+  def previous_page
+    @pages_w_posts[@current_page - 1].each do |post|
+      publish_post(post)
+    end  
+    @current_page -= 1 unless @current_page == 0
+    print_pagination  
   end
 
   def publish
@@ -29,8 +51,7 @@ class Blog
     @pages_w_posts[0].each do |post|
       publish_post(post)
     end
-    # print pagination
-    @pages_w_posts.each_index { |page_i| print page_i + 1, " " }
+    print_pagination
   end
 
 end
@@ -70,3 +91,4 @@ blog.posts << p7
 blog.posts << p8
 blog.posts << p9
 blog.publish
+blog.next_page
