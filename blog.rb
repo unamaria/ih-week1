@@ -1,11 +1,9 @@
 require 'date'
 require 'colorize'
 
-class Blog < Array
+class Blog
 
   def initialize 
-    @current_last_post = 2
-    @current_page = 1
   end
 
   def publish_post(post)
@@ -13,55 +11,13 @@ class Blog < Array
     puts post.text
   end
 
-  def paginate
-    posts = self.size
-    i = 1
-    while posts > 0
-      print i == @current_page ? "#{i} ".colorize(:red) : "#{i} "
-      posts -= 3
-      i += 1
-    end      
+  def paginate    
   end 
 
   def sort_by_date(arr)
     arr.sort! { |x, y| x.date <=> y.date } # CHECK .SORT_BY
   end
 
-  def publish_front_page
-    # PUBLISH 3 POSTS
-    self.sort_by_date(self.first(3)).each do |post|
-      publish_post(post)
-    end
-    paginate
-  end 
-
-  def publish_next_page
-    self.slice(@current_last_post + 1, self.size).first(3).each do |post|
-      publish_post(post)
-      @current_last_post = self.index(post)
-    end
-    @current_page += 1 unless @current_page == 3
-    paginate
-  end
-
-  def publish_previous_page
-    self.slice(@current_last_post - 5, self.size).first(3).each do |post|
-      publish_post(post)
-      @current_last_post = self.index(post)
-    end
-    @current_page -= 1 unless @current_page == 1
-    paginate
-  end
-
-  def changePage
-    c = read_char
-    if c == "\e[C" # right arrow
-      publish_next_page unless @current_page == 3       
-    elsif c == "\e[D" # left arrow
-      publish_previous_page unless @current_page == 1      
-    end 
-    c == " " ? return : changePage
-  end
 end
 
 class Post
