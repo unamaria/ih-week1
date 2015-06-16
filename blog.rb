@@ -20,7 +20,9 @@ class Blog
   end
 
   def print_pagination
-    @pages_w_posts.each_index { |page_i| print page_i + 1, " " }
+    @pages_w_posts.each_index do |page_i| 
+      print page_i == @current_page ? (page_i + 1).to_s.colorize(:red) + " " : (page_i + 1).to_s + " "
+    end
   end
 
   def next_page
@@ -92,3 +94,5 @@ blog.posts << p8
 blog.posts << p9
 blog.publish
 blog.next_page
+blog.next_page
+blog.previous_page
