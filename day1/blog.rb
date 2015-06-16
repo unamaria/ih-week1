@@ -68,7 +68,7 @@ class Blog
     elsif c == "\e[D" # left arrow
       previous_page unless @current_page == 0  
     end 
-    c == " " ? return : changePage
+    c == "q" ? return : changePage
   end
 
   def publish
