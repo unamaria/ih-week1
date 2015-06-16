@@ -3,6 +3,7 @@ require 'colorize'
 require 'io/console'
  
 # Reads keypresses from the user including 2 and 3 escape character sequences.
+# code from: https://gist.github.com/acook/4190379
 def read_char
   STDIN.echo = false
   STDIN.raw!
@@ -18,6 +19,7 @@ ensure
  
   return input
 end
+# end of keypress.rb code
 
 class Blog
   attr_reader :posts, :pages_w_posts
@@ -62,7 +64,7 @@ class Blog
   def changePage
     c = read_char
     if c == "\e[C" # right arrow
-      next_page unless @current_page == @pages_w_posts.size - 1       
+      next_page unless @current_page == @pages_w_posts.size - 1  
     elsif c == "\e[D" # left arrow
       previous_page unless @current_page == 0  
     end 
@@ -73,8 +75,9 @@ class Blog
     # sort
     sort_by_date(@posts)
     # organise in pages
-    while @posts.size != 0
-      first_3_posts = @posts.slice!(0,3)
+    @temp_posts = @posts.dup # dup creates shallow copy
+    while @temp_posts.size != 0
+      first_3_posts = @temp_posts.slice!(0,3)
       @pages_w_posts << first_3_posts
     end
     # puts posts
@@ -122,6 +125,3 @@ blog.posts << p7
 blog.posts << p8
 blog.posts << p9
 blog.publish
-blog.next_page
-blog.next_page
-blog.previous_page
