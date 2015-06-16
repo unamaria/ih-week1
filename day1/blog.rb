@@ -26,3 +26,13 @@ class Post
   end
 
 end
+
+
+p1 = Post.new("Rough trade", Date.new(2015,2,3), "Cool music store", "sponsor")
+p2 = Post.new("Joan Miquel Oliver", Date.new(2014,2,3), "Era un homenet petit")
+
+blog = Blog.new
+blog << p1
+blog << p2
+
+blog.publish
