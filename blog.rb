@@ -1,5 +1,23 @@
 require 'date'
 require 'colorize'
+require 'io/console'
+
+# Reads keypresses from the user including 2 and 3 escape character sequences.
+def read_char
+  STDIN.echo = false
+  STDIN.raw!
+ 
+  input = STDIN.getc.chr
+  if input == "\e" then
+    input << STDIN.read_nonblock(3) rescue nil
+    input << STDIN.read_nonblock(2) rescue nil
+  end
+ensure
+  STDIN.echo = true
+  STDIN.cooked!
+ 
+  return input
+end
 
 class Blog < Array
 
@@ -20,7 +38,7 @@ class Blog < Array
       print i == @current_page ? "#{i} ".colorize(:red) : "#{i} "
       posts -= 3
       i += 1
-    end
+    end      
   end 
 
   def sort_by_date(arr)
@@ -40,7 +58,7 @@ class Blog < Array
       publish_post(post)
       @current_last_post = self.index(post)
     end
-    @current_page += 1
+    @current_page += 1 unless @current_page == 3
     paginate
   end
 
@@ -49,8 +67,18 @@ class Blog < Array
       publish_post(post)
       @current_last_post = self.index(post)
     end
-    @current_page -= 1
+    @current_page -= 1 unless @current_page == 1
     paginate
+  end
+
+  def changePage
+    c = read_char
+    if c == "\e[C" # right arrow
+      publish_next_page unless @current_page == 3       
+    elsif c == "\e[D" # left arrow
+      publish_previous_page unless @current_page == 1      
+    end 
+    c == " " ? return : changePage
   end
 end
 
@@ -76,7 +104,7 @@ p5 = Post.new("Post number 5", Date.new(2014,2,3), "Era un homenet petit")
 p6 = Post.new("Post number 6", Date.new(2014,2,3), "Era un homenet petit")
 p7 = Post.new("Post number 7", Date.new(2014,2,3), "Era un homenet petit")
 p8 = Post.new("Post number 8", Date.new(2014,2,3), "Era un homenet petit")
-# p9 = Post.new("Post number 9", Date.new(2014,2,3), "Era un homenet petit")
+p9 = Post.new("Post number 9", Date.new(2014,2,3), "Era un homenet petit")
 
 blog = Blog.new
 blog << p1
@@ -87,9 +115,8 @@ blog << p5
 blog << p6
 blog << p7
 blog << p8
-# blog << p9 IF LAST PAGE HAS 2 POSTS METHODS DON'T WORK
+blog << p9 # IF LAST PAGE HAS 2 POSTS METHODS DON'T WORK
 
 
 blog.publish_front_page
-blog.publish_next_page
-blog.publish_previous_page
+blog.changePage
