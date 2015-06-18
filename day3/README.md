@@ -1,4 +1,4 @@
-# Object oriented Blog
+# Console keynote
 
 ## Iteration 1: The keynote
 
