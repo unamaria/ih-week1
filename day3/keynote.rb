@@ -71,25 +71,6 @@ class Presentation
     @current_slide = 0
   end
 
-  def navigation
-    while @current_slide < @slides.length && @current_slide >= 0
-      input = get_input
-      if input == "next"
-        @current_slide += 1
-        if @current_slide > (@slides.length - 1) then exit end
-        @slides[@current_slide].show_slide
-      elsif input == "previous"
-        @current_slide -= 1
-        if @current_slide < 0 then exit end
-        @slides[@current_slide].show_slide
-      elsif input == "q"
-        exit
-      else 
-        puts "Sorry, you can either type previous or next"
-      end
-    end 
-  end
-
   def ask_input
     puts ">"
   end
@@ -97,6 +78,34 @@ class Presentation
   def get_input
       ask_input
       gets.chomp
+  end
+
+  def first_slide?
+    @current_slide < 0
+  end
+
+  def last_slide?
+    @current_slide > (@slides.length - 1)
+  end
+
+  def navigation
+    while !first_slide? && !last_slide? 
+      input = get_input
+      case input
+      when "next"
+        @current_slide += 1
+        if last_slide? then exit end
+        @slides[@current_slide].show_slide
+      when "previous"
+        @current_slide -= 1
+        if first_slide? then exit end
+        @slides[@current_slide].show_slide
+      when "q"
+        exit
+      else
+        puts "Sorry, you can either type previous or next"
+      end
+    end 
   end
 
   def show
