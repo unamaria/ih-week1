@@ -1,22 +1,5 @@
 require 'terminfo'
 
-class TextFileParser
-  def initialize(file)
-    @file = file
-  end
-
-  def run
-    content = File.readlines(@file)
-    slides = []
-    content.each_with_index do |line, i|
-      if (i % 2 == 0)
-        slides.push(line.strip)
-      end
-    end
-    slides
-  end
-end
-
 class Terminal
   def initialize
     @term_info = TermInfo.screen_size
@@ -31,32 +14,73 @@ class Terminal
   end
 end
 
+class TextFileParser
+  def initialize(file)
+    @file = file
+  end
+
+  def run
+    all_content = File.readlines(@file)
+    selected_content = []
+    all_content.each_with_index do |line, i|
+      if (i % 2 == 0)
+        selected_content.push(line.strip)
+      end
+    end
+    selected_content
+  end
+end
+
+class Slide
+  attr_reader :show_slide, :place_slide
+  def initialize(content, term)
+    @content = content
+    @term = term
+  end
+
+  def place_slide
+    vertical = @term.height / 2 - 1
+    horizontal = (@term.width - @content.length) / 2
+    @content = ("\n" * (vertical / 2) +  " " * horizontal + @content + "\n" * (vertical / 2))
+  end
+
+  def show_slide
+    puts place_slide
+  end
+end
+
+class SlideGenerator
+  def initialize(content_parsed)
+    @content_parsed = content_parsed
+    @slides = []
+    @term = Terminal.new
+  end
+  def run
+    @content_parsed.each do |content|
+      slide = Slide.new(content, @term)
+      slide.place_slide
+      @slides << slide
+    end 
+    @slides  
+  end
+end
+
 class Presentation
   def initialize(slides)
     @slides = slides
     @current_slide = 0
-    @term = Terminal.new
-  end
-
-  def place_slide(slide)
-    vertical = @term.height / 2 - 1
-    horizontal = (@term.width - slide.length) / 2
-    ("\n" * vertical) +  " " * horizontal + slide + ("\n" * vertical)
-  end
-
-  def show_slide
-    puts place_slide(@slides[@current_slide])
   end
 
   def navigation
-    while @current_slide < @slides.length
+    while @current_slide < @slides.length && @current_slide >= 0
+      puts "CURRENT SLIDE: #{@current_slide}"
       input = get_input
       if input == "next"
         @current_slide += 1
-        show_slide
+        @slides[@current_slide].show_slide
       elsif input == "previous"
         @current_slide -= 1
-        show_slide
+        @slides[@current_slide].show_slide
       else 
         puts "Sorry, you can either type previous or next"
       end
@@ -73,11 +97,12 @@ class Presentation
   end
 
   def show
-    show_slide
+    @slides[@current_slide].show_slide
     navigation
   end
 
 end
 
-slides = TextFileParser.new('slides.txt').run
+parsed_text = TextFileParser.new("slides.txt").run
+slides = SlideGenerator.new(parsed_text).run
 Presentation.new(slides).show
