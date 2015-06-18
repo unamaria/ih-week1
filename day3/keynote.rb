@@ -55,6 +55,7 @@ class SlideGenerator
     @slides = []
     @term = Terminal.new
   end
+
   def run
     @content_parsed.each do |content|
       slide = Slide.new(content, @term)
@@ -88,18 +89,39 @@ class Presentation
     @current_slide > (@slides.length - 1)
   end
 
+  def show_slide
+    @slides[@current_slide].show_slide
+  end
+
+  def auto_nav
+    while @current_slide != @slides.length - 1
+      @current_slide += 1
+      show_slide
+      sleep 3
+    end
+    exit
+  end
+
   def navigation
     while !first_slide? && !last_slide? 
       input = get_input
       case input
+      when "auto"
+        auto_nav
       when "next"
         @current_slide += 1
-        if last_slide? then exit end
-        @slides[@current_slide].show_slide
+        if last_slide?
+          exit
+        else
+          show_slide
+        end
       when "previous"
         @current_slide -= 1
-        if first_slide? then exit end
-        @slides[@current_slide].show_slide
+        if first_slide?
+          exit
+        else
+          show_slide
+        end
       when "q"
         exit
       else
@@ -112,7 +134,6 @@ class Presentation
     @slides[@current_slide].show_slide
     navigation
   end
-
 end
 
 parsed_text = TextFileParser.new("slides.txt").run
