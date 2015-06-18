@@ -41,7 +41,7 @@ class Slide
   def place_slide
     vertical = @term.height / 2 - 1
     horizontal = (@term.width - @content.length) / 2
-    @content = ("\n" * (vertical / 2) +  " " * horizontal + @content + "\n" * (vertical / 2))
+    ("\n" * (vertical) +  " " * horizontal + @content + "\n" * (vertical))
   end
 
   def show_slide
@@ -73,14 +73,17 @@ class Presentation
 
   def navigation
     while @current_slide < @slides.length && @current_slide >= 0
-      puts "CURRENT SLIDE: #{@current_slide}"
       input = get_input
       if input == "next"
         @current_slide += 1
+        if @current_slide > (@slides.length - 1) then exit end
         @slides[@current_slide].show_slide
       elsif input == "previous"
         @current_slide -= 1
+        if @current_slide < 0 then exit end
         @slides[@current_slide].show_slide
+      elsif input == "q"
+        exit
       else 
         puts "Sorry, you can either type previous or next"
       end
@@ -92,8 +95,8 @@ class Presentation
   end
 
   def get_input
-    ask_input
-    gets.chomp
+      ask_input
+      gets.chomp
   end
 
   def show
