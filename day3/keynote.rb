@@ -94,6 +94,7 @@ class Presentation
   end
 
   def auto_nav
+    sleep 3
     while @current_slide != @slides.length - 1
       @current_slide += 1
       show_slide

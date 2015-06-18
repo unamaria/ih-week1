@@ -14,3 +14,7 @@ At the bottom of the terminal, you need to show a prompt > that can take the fol
 * previous: For the previous one (unless it’s the first slide)
 
 When the user enters next, the next line of the text file should appear on the terminal, centered and with the prompt at the bottom, until you reach the last line.
+
+## Iteration 2: Auto-advance
+
+Add an option to auto advance: add a command called auto that will move to the next slide every 3 seconds until the last slide. Once in auto advance mode, there should be no user prompt.
