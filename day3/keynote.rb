@@ -73,7 +73,7 @@ class Presentation
   end
 
   def ask_input
-    puts ">"
+    puts "To change slides, type previous or next >"
   end
 
   def get_input
@@ -132,6 +132,7 @@ class Presentation
 
   def show
     @slides[@current_slide].show_slide
+    puts "If you want to run the presentation automatically, type auto."
     navigation
   end
 end
