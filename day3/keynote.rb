@@ -1,5 +1,4 @@
 require 'terminfo'
-require 'pry'
 
 class Terminal
   def initialize
@@ -24,28 +23,11 @@ class TextFileParser
     all_content = IO.read(@file)
     selected_content = []
     all_content.each_line("----") do |slide_content|
-      selected_content.push(slide_content.strip)
+      selected_content.push(slide_content.strip.chomp("----"))
     end
     selected_content
   end
 end
-
-# class TextFileParser
-#   def initialize(file)
-#     @file = file
-#   end
-
-#   def run
-#     all_content = File.readlines(@file)
-#     selected_content = []
-#     all_content.each_with_index do |line, i|
-#       if (i % 2 == 0)
-#         selected_content.push(line.strip)
-#       end
-#     end
-#     selected_content
-#   end
-# end
 
 class Slide
   attr_reader :show_slide, :place_slide
@@ -72,7 +54,6 @@ class Slide
   def place_slide
     vertical = (@term.height - slide_height) / 2 
     horizontal = (@term.width - slide_width) / 2
-    # binding.pry
     placed_slide = "\n" * vertical
     @content.each_line do |line|
       placed_slide += (" " * horizontal) + line
