@@ -18,3 +18,7 @@ When the user enters next, the next line of the text file should appear on the t
 ## Iteration 2: Auto-advance
 
 Add an option to auto advance: add a command called auto that will move to the next slide every 3 seconds until the last slide. Once in auto advance mode, there should be no user prompt.
+
+## Iteration 3: Multi-line slides
+
+So far, all of our slides are just one line of text. But what if we want to add some multi-line slides or cool graphics to our presentation? We need to add support for slides that are more than one line. The multi-line content should still be centered vertically and horizontally on the screen.

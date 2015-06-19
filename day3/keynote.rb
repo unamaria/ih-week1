@@ -1,4 +1,5 @@
 require 'terminfo'
+require 'pry'
 
 class Terminal
   def initialize
@@ -20,16 +21,31 @@ class TextFileParser
   end
 
   def run
-    all_content = File.readlines(@file)
+    all_content = IO.read(@file)
     selected_content = []
-    all_content.each_with_index do |line, i|
-      if (i % 2 == 0)
-        selected_content.push(line.strip)
-      end
+    all_content.each_line("----") do |slide_content|
+      selected_content.push(slide_content.strip)
     end
     selected_content
   end
 end
+
+# class TextFileParser
+#   def initialize(file)
+#     @file = file
+#   end
+
+#   def run
+#     all_content = File.readlines(@file)
+#     selected_content = []
+#     all_content.each_with_index do |line, i|
+#       if (i % 2 == 0)
+#         selected_content.push(line.strip)
+#       end
+#     end
+#     selected_content
+#   end
+# end
 
 class Slide
   attr_reader :show_slide, :place_slide
@@ -38,10 +54,30 @@ class Slide
     @term = term
   end
 
+  def slide_height
+    content_height = @content.scan(/\n/).size
+  end
+
+  def slide_width
+    content_arr = @content.split("\n")
+    longest_line_size = content_arr[0].size
+    content_arr.each do |line| 
+      if line.size > longest_line_size
+        longest_line_size = line.size
+      end
+    end
+    longest_line_size
+  end
+
   def place_slide
-    vertical = @term.height / 2 - 1
-    horizontal = (@term.width - @content.length) / 2
-    ("\n" * (vertical) +  " " * horizontal + @content + "\n" * (vertical))
+    vertical = (@term.height - slide_height) / 2 
+    horizontal = (@term.width - slide_width) / 2
+    # binding.pry
+    placed_slide = "\n" * vertical
+    @content.each_line do |line|
+      placed_slide += (" " * horizontal) + line
+    end
+    placed_slide += "\n" * vertical
   end
 
   def show_slide
